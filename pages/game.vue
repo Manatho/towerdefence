@@ -5,6 +5,7 @@
       width="500"
       height="500"
       style="border: 1px solid #000000"
+      @click="onClick"
     >
     </canvas>
   </div>
@@ -20,12 +21,27 @@ export default {
     let canvas = this.$refs.gameCanvas as HTMLCanvasElement;
     let ctx = canvas.getContext("2d");
 
-    console.log(GameInstanceSettings);
-    
-    let graphics = new Graphics(canvas, ctx);
-    let game = new Game(graphics);
+    this.graphics = new Graphics(canvas, ctx);
+    this.game = new Game(this.graphics);
 
-    game.start();
+    this.game.start();
+  },
+
+  data() {
+    return {
+      game: null as Game,
+      graphics: null as Graphics,
+    };
+  },
+
+  methods: {
+    onClick(e: MouseEvent) {
+      var rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+      var x = e.clientX - rect.left; //x position within the element.
+      var y = e.clientY - rect.top; //y position within the element.
+
+      this.game.click(x, y);
+    },
   },
 };
 </script>

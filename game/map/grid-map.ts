@@ -3,6 +3,20 @@ import { Graphics } from "../util/graphics";
 
 export type Grid = number[][];
 
+export class Point {
+  x: number;
+  y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toKey() {
+    return `${this.x}_${this.y}`;
+  }
+}
+
 export class GridMap {
   grid: Grid;
   textures: string[] = [];
@@ -10,6 +24,21 @@ export class GridMap {
   constructor(grid: Grid) {
     this.grid = grid;
     this.textures = GameInstanceSettings.defaultMapTextures;
+  }
+
+  getTile(point: Point) {
+    let row = this.grid[point.y];
+
+    if (
+      row == undefined ||
+      point.x > row.length ||
+      point.y < 0 ||
+      point.x < 0
+    ) {
+      return undefined;
+    } else {
+      return row[point.x];
+    }
   }
 
   render(graphics: Graphics) {

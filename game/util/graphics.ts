@@ -4,7 +4,7 @@ export class Graphics {
     readonly ctx: CanvasRenderingContext2D
   ) {}
 
-  size = 50;
+  unitMultiplier = 50;
 
   fillRect(
     x: number,
@@ -18,10 +18,10 @@ export class Graphics {
     }
 
     this.ctx.fillRect(
-      x * this.size,
-      y * this.size,
-      width * this.size,
-      height * this.size
+      x * this.unitMultiplier,
+      y * this.unitMultiplier,
+      width * this.unitMultiplier,
+      height * this.unitMultiplier
     );
   }
 }
