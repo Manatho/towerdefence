@@ -7,7 +7,7 @@ export class Creep {
 
   constructor(x: number, y: number) {
     this.position = new Point(x, y);
-    this.speed = 0.1;
+    this.speed = 10;
   }
 
   render(graphics: Graphics) {

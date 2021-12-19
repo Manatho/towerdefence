@@ -12,11 +12,12 @@
 </template>
 
 <script lang="ts">
-import { Game } from "~~/game/game";
-import { GameInstanceSettings } from "~~/game/game-instance-settings/game-instance-settings";
+import { TowerDefence } from "~~/game/towerdefence";
 import { Graphics } from "~~/game/util/graphics";
+import { GameLoopController } from "~~/game/util/gameloop/controller";
 
-let game = null as Game;
+let game = null as TowerDefence;
+let controller = null as GameLoopController;
 let graphics = null as Graphics;
 
 export default {
@@ -25,9 +26,19 @@ export default {
     let ctx = canvas.getContext("2d");
 
     graphics = new Graphics(canvas, ctx);
-    game = new Game(graphics);
+
+    game = new TowerDefence();
+    controller = new GameLoopController(game, 0);
+    controller.speed = 1 / 60;
 
     game.start();
+
+    controller.startLoop(
+      () => {},
+      () => {
+        game.render(graphics);
+      }
+    );
   },
 
   methods: {
