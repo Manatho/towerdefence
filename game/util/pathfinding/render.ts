@@ -1,7 +1,9 @@
+import { NavigationMap } from "~~/game/pathfinding/navigation-map";
 import { PathfindingNode } from "~~/game/pathfinding/pathfinding";
 import { Graphics } from "../graphics";
 
-export function renderPath(paths: PathfindingNode[], graphics: Graphics) {
+export function renderPath(NavigationMap: NavigationMap, graphics: Graphics) {
+  let paths = Array.from(NavigationMap.nodes.values());
   paths.forEach((tile) => {
     let x = tile.point.x + 0.5;
     let y = tile.point.y + 0.5;

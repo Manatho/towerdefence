@@ -16,22 +16,18 @@ import { Game } from "~~/game/game";
 import { GameInstanceSettings } from "~~/game/game-instance-settings/game-instance-settings";
 import { Graphics } from "~~/game/util/graphics";
 
+let game = null as Game;
+let graphics = null as Graphics;
+
 export default {
   mounted() {
     let canvas = this.$refs.gameCanvas as HTMLCanvasElement;
     let ctx = canvas.getContext("2d");
 
-    this.graphics = new Graphics(canvas, ctx);
-    this.game = new Game(this.graphics);
+    graphics = new Graphics(canvas, ctx);
+    game = new Game(graphics);
 
-    this.game.start();
-  },
-
-  data() {
-    return {
-      game: null as Game,
-      graphics: null as Graphics,
-    };
+    game.start();
   },
 
   methods: {
@@ -40,7 +36,7 @@ export default {
       var x = e.clientX - rect.left; //x position within the element.
       var y = e.clientY - rect.top; //y position within the element.
 
-      this.game.click(x, y);
+      game.click(x, y);
     },
   },
 };

@@ -1,6 +1,7 @@
 import { Creep } from "./creeps/creep";
 import { GameInstanceSettings } from "./game-instance-settings/game-instance-settings";
 import { GridMap } from "./map/grid-map";
+import { NavigationMap } from "./pathfinding/navigation-map";
 import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
 import { Graphics } from "./util/graphics";
 import { renderPath } from "./util/pathfinding/render";
@@ -10,7 +11,7 @@ export class Game {
   constructor(readonly graphics: Graphics) {}
 
   currentMap: GridMap;
-  currentNavigationMap: PathfindingNode[];
+  currentNavigationMap: NavigationMap;
 
   creeps: Creep[] = [];
 
@@ -24,10 +25,25 @@ export class Game {
       end
     );
     this.currentMap.render(this.graphics);
-    //renderPath(this.currentNavigationMap, this.graphics);
+    renderPath(this.currentNavigationMap, this.graphics);
 
     this.creeps.push(new Creep(start.x, start.y));
     this.creeps.forEach((c) => c.render(this.graphics));
+
+    for (let i = 0; i < 200; i++) {
+      this.gameLoop();
+    }
+  }
+
+  gameLoop() {
+    this.creeps.forEach((creep) => {
+      let node = this.currentNavigationMap.get(creep.position);
+
+      let direction = Point.multiply(node.direction, creep.speed);
+
+      creep.position.add(direction);
+      creep.render(this.graphics);
+    });
   }
 
   click(x: number, y: number) {

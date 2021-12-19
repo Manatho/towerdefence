@@ -1,5 +1,6 @@
 import { Grid, GridMap } from "../map/grid-map";
-import { Point } from "../util/primitives/point";
+import { Point, PointKey } from "../util/primitives/point";
+import { NavigationMap } from "./navigation-map";
 
 export class PathfindingNode {
   constructor(
@@ -15,6 +16,14 @@ export class PathfindingNode {
       new Point(this.point.x, this.point.y + 1),
       new Point(this.point.x, this.point.y - 1),
     ];
+  }
+
+  get direction(): Point {
+    if (this.parent == null) {
+      return Point.subtract(this.point, this.point);
+    } else {
+      return Point.subtract(this.parent, this.point);
+    }
   }
 }
 
@@ -43,8 +52,8 @@ class PriorityQueue<T> {
   }
 }
 
-function djikstra(map: GridMap, start: Point): PathfindingNode[] {
-  let closedList = new Map<string, PathfindingNode>();
+function djikstra(map: GridMap, start: Point): Map<PointKey, PathfindingNode> {
+  let closedList = new Map<PointKey, PathfindingNode>();
   let openList = new PriorityQueue<PathfindingNode>();
 
   closedList.set(start.toKey(), new PathfindingNode(start, 0));
@@ -67,11 +76,13 @@ function djikstra(map: GridMap, start: Point): PathfindingNode[] {
     });
   }
 
-  return Array.from(closedList.values());
+  return closedList;
 }
 
 export class Pathfinder {
-  static djikstra(map: GridMap, start: Point): PathfindingNode[] {
-    return djikstra(map, start);
+  static djikstra(map: GridMap, start: Point): NavigationMap {
+    let nodes = djikstra(map, start);
+    let navMap = new NavigationMap(nodes);
+    return navMap;
   }
 }
