@@ -1,4 +1,5 @@
 import { Creep } from "./creeps/creep";
+import { deadCreepRemover, creepMover } from "./creeps/creep.systems";
 import { GameInstanceSettings } from "./game-instance-settings/game-instance-settings";
 import { GridMap } from "./map/grid-map";
 import { NavigationMap } from "./pathfinding/navigation-map";
@@ -31,13 +32,8 @@ export class TowerDefence implements Game {
   }
 
   update() {
-    this.creeps.forEach((creep) => {
-      let node = this.currentNavigationMap.get(creep.position);
-
-      let direction = Point.multiply(node.direction, creep.speed * this.controller.delta);
-
-      creep.position.add(direction);
-    });
+    this.creeps = creepMover(this.creeps, this.currentNavigationMap, this.controller.delta);
+    this.creeps = deadCreepRemover(this.creeps);
   }
 
   render(graphics: Graphics): void {
