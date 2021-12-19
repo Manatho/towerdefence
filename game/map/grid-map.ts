@@ -1,21 +1,8 @@
 import { GameInstanceSettings } from "../game-instance-settings/game-instance-settings";
 import { Graphics } from "../util/graphics";
+import { Point } from "../util/primitives/point";
 
 export type Grid = number[][];
-
-export class Point {
-  x: number;
-  y: number;
-
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-
-  toKey() {
-    return `${this.x}_${this.y}`;
-  }
-}
 
 export class GridMap {
   grid: Grid;
