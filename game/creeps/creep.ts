@@ -4,12 +4,11 @@ import { Point } from "../util/primitives/point";
 export class Creep {
   position: Point;
   speed: number;
-  dead: boolean;
+  dead: boolean = false;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, speed = 5) {
     this.position = new Point(x, y);
-    this.speed = 5;
-    this.dead = false;
+    this.speed = speed;
   }
 
   render(graphics: Graphics) {
@@ -21,4 +20,8 @@ export class Creep {
       "#f00"
     );
   }
+}
+
+export class CreepTemplate {
+  constructor(readonly speed: number) {}
 }

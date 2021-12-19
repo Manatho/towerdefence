@@ -8,6 +8,8 @@ import { GameLoopController, Game } from "./util/gameloop/controller";
 import { Graphics } from "./util/graphics";
 import { renderPath } from "./util/pathfinding/render";
 import { Point } from "./util/primitives/point";
+import { Wave } from "./wave/wave";
+import { waveSpawner } from "./wave/wave.systems";
 
 export class TowerDefence implements Game {
   constructor() {}
@@ -15,24 +17,36 @@ export class TowerDefence implements Game {
   controller: GameLoopController;
   currentMap: GridMap;
   currentNavigationMap: NavigationMap;
+  currentWave: Wave;
 
   creeps: Creep[] = [];
 
+  endPoint = new Point(6, 9);
+  startPoint = new Point(3, 0);
+
   start() {
     this.currentMap = GameInstanceSettings.maps[0];
+    this.currentWave = GameInstanceSettings.waves[0];
 
-    let end = new Point(6, 9);
-    let start = new Point(3, 0);
     this.currentNavigationMap = Pathfinder.djikstra(
       this.currentMap, //
-      end
+      this.endPoint
     );
-
-    this.creeps.push(new Creep(start.x, start.y));
   }
 
   update() {
-    this.creeps = creepMover(this.creeps, this.currentNavigationMap, this.controller.delta);
+    waveSpawner(
+      this.currentWave,
+      this.creeps,
+      this.startPoint,
+      this.controller.delta
+    );
+
+    this.creeps = creepMover(
+      this.creeps,
+      this.currentNavigationMap,
+      this.controller.delta
+    );
     this.creeps = deadCreepRemover(this.creeps);
   }
 
