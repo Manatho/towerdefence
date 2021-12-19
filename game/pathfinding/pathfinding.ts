@@ -1,4 +1,5 @@
-import { Grid, GridMap, Point } from "../map/grid-map";
+import { Grid, GridMap } from "../map/grid-map";
+import { Point } from "../util/primitives/point";
 
 export class PathfindingNode {
   constructor(

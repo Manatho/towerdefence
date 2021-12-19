@@ -25,6 +25,9 @@ export class Game {
     );
     this.currentMap.render(this.graphics);
     //renderPath(this.currentNavigationMap, this.graphics);
+
+    this.creeps.push(new Creep(start.x, start.y));
+    this.creeps.forEach((c) => c.render(this.graphics));
   }
 
   click(x: number, y: number) {
