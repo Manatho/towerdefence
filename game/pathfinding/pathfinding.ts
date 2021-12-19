@@ -1,6 +1,6 @@
 import { Grid, GridMap, Point } from "../map/grid-map";
 
-class Entry {
+export class PathfindingNode {
   constructor(
     readonly point: Point,
     readonly cost: number,
@@ -42,12 +42,12 @@ class PriorityQueue<T> {
   }
 }
 
-function djikstra(map: GridMap, start: Point): Entry[] {
-  let tiles = new Map<string, Entry>();
-  let openList = new PriorityQueue<Entry>();
+function djikstra(map: GridMap, start: Point): PathfindingNode[] {
+  let closedList = new Map<string, PathfindingNode>();
+  let openList = new PriorityQueue<PathfindingNode>();
 
-  tiles.set(start.toKey(), new Entry(start, 0));
-  openList.enqueue(tiles.get(start.toKey()), 0);
+  closedList.set(start.toKey(), new PathfindingNode(start, 0));
+  openList.enqueue(closedList.get(start.toKey()), 0);
 
   let i = 0;
   while (openList.length > 0 && i < 1000) {
@@ -56,21 +56,21 @@ function djikstra(map: GridMap, start: Point): Entry[] {
 
     current.neighbours.forEach((point) => {
       // Only consider non-visited and existing tiles
-      if (!tiles.has(point.toKey()) && map.getTile(point) !== undefined) {
+      if (!closedList.has(point.toKey()) && map.getTile(point) !== undefined) {
         let cost = current.cost + 1;
 
-        let entry = new Entry(point, cost, current.point);
-        tiles.set(point.toKey(), entry);
-        openList.enqueue(entry, cost);
+        let node = new PathfindingNode(point, cost, current.point);
+        closedList.set(point.toKey(), node);
+        openList.enqueue(node, cost);
       }
     });
   }
 
-  return Array.from(tiles.values());
+  return Array.from(closedList.values());
 }
 
 export class Pathfinder {
-  static djikstra(map: GridMap, start: Point): Entry[] {
+  static djikstra(map: GridMap, start: Point): PathfindingNode[] {
     return djikstra(map, start);
   }
 }

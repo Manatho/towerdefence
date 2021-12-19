@@ -37,7 +37,12 @@ export class GridMap {
     ) {
       return undefined;
     } else {
-      return row[point.x];
+      // path tile is 3
+      if (row[point.x] == 3) {
+        return row[point.x];
+      } else {
+        return undefined;
+      }
     }
   }
 
