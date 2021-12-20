@@ -1,5 +1,14 @@
 <template>
-  <div class="flex justify-center items-center">
+  <div class="flex flex-col justify-center items-center">
+    <div class="flex gap-4">
+      <span>{{ state }}</span>
+      <span>Time until spawn: {{ prepTime.toFixed(0) }}</span>
+      <span>Time until next wave: {{ fightTime.toFixed(0) }}</span>
+    </div>
+    <div>
+      <span>waves: {{ wave }} / {{ totalWaves }}</span>
+    </div>
+
     <canvas
       ref="gameCanvas"
       width="500"
@@ -15,6 +24,7 @@
 import { TowerDefence } from "~~/game/towerdefence";
 import { Graphics } from "~~/game/util/graphics";
 import { GameLoopController } from "~~/game/util/gameloop/controller";
+import { WaveState } from "~~/game/wave/wave";
 
 let game = null as TowerDefence;
 let controller = null as GameLoopController;
@@ -36,9 +46,26 @@ export default {
     controller.startLoop(
       () => {},
       () => {
+        let currentWave = game.waves.currentWave;
+        this.prepTime = currentWave.prepTime;
+        this.fightTime = currentWave.fightTime;
+        this.state = currentWave.state;
+        this.wave = game.waves.currentWaveIndex + 1;
+        this.totalWaves = game.waves.waves.length;
+
         game.render(graphics);
       }
     );
+  },
+
+  data() {
+    return {
+      prepTime: 0,
+      fightTime: 0,
+      state: WaveState.Prepping,
+      wave: 0,
+      totalWaves: 0,
+    };
   },
 
   methods: {
