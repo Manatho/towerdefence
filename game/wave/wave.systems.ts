@@ -1,6 +1,7 @@
 import { Creep } from "../creeps/creep";
 import { Point } from "../util/primitives/point";
-import { Wave } from "./wave";
+import { Wave, WaveState } from "./wave";
+import { Waves } from "./waves";
 
 export function waveSpawner(
   wave: Wave,
@@ -8,10 +9,25 @@ export function waveSpawner(
   startPoint: Point,
   delta: number
 ) {
-  wave.nextSpawn -= delta;
-  if (wave.nextSpawn <= 0 && wave.spawned < wave.amount) {
-    wave.nextSpawn = wave.interval;
-    wave.spawned++;
-    creeps.push(new Creep(startPoint.x, startPoint.y, wave.template.speed));
+  if (wave.prepTime > 0) {
+    wave.prepTime -= delta;
+  } else if (wave.spawned < wave.amount) {
+    wave.nextSpawn -= delta;
+    if (wave.nextSpawn <= 0) {
+      wave.nextSpawn = wave.interval;
+      wave.spawned++;
+      creeps.push(new Creep(startPoint.x, startPoint.y, wave.template.speed));
+    }
+  } else if (wave.fightTime > 0) {
+    wave.fightTime -= delta;
+  }
+}
+
+export function nextWave(waves: Waves) {
+  if (
+    waves.currentWave.state == WaveState.Finished &&
+    waves.currentWaveIndex < waves.length - 1 
+  ) {
+    waves.currentWaveIndex++;
   }
 }

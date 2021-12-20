@@ -13,10 +13,10 @@ export class Creep {
 
   render(graphics: Graphics) {
     graphics.fillRect(
-      this.position.x + 0.35,
-      this.position.y + 0.35,
-      0.3,
-      0.3,
+      this.position.x,
+      this.position.y,
+      0.1,
+      0.1,
       "#f00"
     );
   }
