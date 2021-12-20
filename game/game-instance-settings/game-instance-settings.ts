@@ -25,14 +25,14 @@ let map1 = new GridMap([
 
 GameInstanceSettings.maps.push(map1);
 
-let wave1 = new Wave(new CreepTemplate(0.2), {
+let wave1 = new Wave(new CreepTemplate(1), {
   amount: 5,
   interval: 1,
   prepTime: 2,
   fightTime: 2,
 });
 
-let wave2 = new Wave(new CreepTemplate(0.3), {
+let wave2 = new Wave(new CreepTemplate(2), {
   amount: 10,
   interval: 1,
   prepTime: 5,
