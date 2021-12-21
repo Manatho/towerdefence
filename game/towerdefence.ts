@@ -9,6 +9,7 @@ import { GridMap } from "./map/grid-map";
 import { NavigationMap } from "./pathfinding/navigation-map";
 import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
 import { Player } from "./player/player";
+import { Tower } from "./tower/tower";
 import { GameLoopController, Game } from "./util/gameloop/controller";
 import { Graphics } from "./util/graphics";
 import { renderPath } from "./util/pathfinding/render";
@@ -32,6 +33,8 @@ export class TowerDefence implements Game {
   startPoint = new Point(3, 0);
 
   player = new Player(10);
+
+  towers: Tower[] = [];
 
   start() {
     this.currentMap = GameInstanceSettings.maps[0];
@@ -58,6 +61,10 @@ export class TowerDefence implements Game {
     );
     creepBaseAttack(this.creeps, this.basePoint, this.player);
 
+    if (this.creeps[0] != null) {
+      this.towers.forEach((t) => (t.target = this.creeps[0].position));
+    }
+
     this.creeps = deadCreepRemover(this.creeps);
 
     nextWave(this.waves);
@@ -67,20 +74,18 @@ export class TowerDefence implements Game {
     this.currentMap.render(graphics);
     renderPath(this.currentNavigationMap, graphics);
     this.creeps.forEach((c) => c.render(graphics));
+    this.towers.forEach((t) => t.render(graphics));
   }
 
   click(x: number, y: number) {
-    /*  let mappedX = Math.floor(x / this.graphics.unitMultiplier);
-    let mappedY = Math.floor(y / this.graphics.unitMultiplier);
-
-    console.log(mappedX, mappedY);
-
-    this.currentMap.render(this.graphics);
-    let paths = Pathfinder.djikstra(
-      this.currentMap,
-      new Point(mappedX, mappedY)
-    );
-
-    renderPath(paths, this.graphics); */
+    let tower = new Tower(x, y);
+    tower.target = new Point(0, 0);
+    if (!this.currentMap.hasCollision(tower.position)) {
+      console.log("added");
+      this.towers.push(tower);
+      this.currentMap.addCollision(tower.position, tower);
+    } else {
+      console.log("added not");
+    }
   }
 }

@@ -73,11 +73,15 @@ export default {
 
   methods: {
     onClick(e: MouseEvent) {
-      var rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
-      var x = e.clientX - rect.left; //x position within the element.
-      var y = e.clientY - rect.top; //y position within the element.
+      let rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+      let x = e.clientX - rect.left;
+      let y = e.clientY - rect.top;
 
-      game.click(x, y);
+      let gameX = Math.floor(x / graphics.unitMultiplier);
+      let gameY = Math.floor(y / graphics.unitMultiplier);
+
+
+      game.click(gameX, gameY);
     },
   },
 };

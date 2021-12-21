@@ -1,12 +1,14 @@
 import { GameInstanceSettings } from "../game-instance-settings/game-instance-settings";
 import { Graphics } from "../util/graphics";
-import { Point } from "../util/primitives/point";
+import { Point, PointKey } from "../util/primitives/point";
 
 export type Grid = number[][];
 
 export class GridMap {
   grid: Grid;
   textures: string[] = [];
+
+  collisionMap: Map<PointKey, any> = new Map();
 
   constructor(grid: Grid) {
     this.grid = grid;
@@ -39,5 +41,17 @@ export class GridMap {
         graphics.fillRect(x, y, 1, 1, this.textures[tile]);
       });
     });
+  }
+
+  addCollision(point: Point, element: any) {
+    this.collisionMap.set(point.toKey(), element);
+  }
+
+  getCollision<T>(point: Point): T | null {
+    return this.collisionMap.get(point.toKey());
+  }
+
+  hasCollision(point: Point): boolean {
+    return this.collisionMap.has(point.toKey());
   }
 }
