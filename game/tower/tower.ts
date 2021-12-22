@@ -1,9 +1,10 @@
 import { Graphics } from "../util/graphics";
+import { IPositioned } from "../util/interfaces/i-positioned";
 import { Point } from "../util/primitives/point";
 
 export class Tower {
   position: Point;
-  target: Point;
+  target: IPositioned;
 
   constructor(x: number, y: number) {
     this.position = new Point(x, y);
@@ -20,7 +21,7 @@ export class Tower {
 
     let center = Point.add(this.position, 0.5);
 
-    let angle = Point.angle(center, this.target);
+    let angle = Point.angle(center, this.target.position);
     let turretEnd = Point.add(
       center,
       new Point(-Math.cos(angle), -Math.sin(angle)).multiply(0.5)

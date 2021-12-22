@@ -10,6 +10,7 @@ import { NavigationMap } from "./pathfinding/navigation-map";
 import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
 import { Player } from "./player/player";
 import { Tower } from "./tower/tower";
+import { towerFire, towerUpdateTargets } from "./tower/tower.systems";
 import { GameLoopController, Game } from "./util/gameloop/controller";
 import { Graphics } from "./util/graphics";
 import { renderPath } from "./util/pathfinding/render";
@@ -61,9 +62,8 @@ export class TowerDefence implements Game {
     );
     creepBaseAttack(this.creeps, this.basePoint, this.player);
 
-    if (this.creeps[0] != null) {
-      this.towers.forEach((t) => (t.target = this.creeps[0].position));
-    }
+    towerUpdateTargets(this.towers, this.creeps);
+    towerFire(this.towers);
 
     this.creeps = deadCreepRemover(this.creeps);
 
@@ -79,7 +79,7 @@ export class TowerDefence implements Game {
 
   click(x: number, y: number) {
     let tower = new Tower(x, y);
-    tower.target = new Point(0, 0);
+    tower.target = { position: new Point(0, 0) };
     if (!this.currentMap.hasCollision(tower.position)) {
       console.log("added");
       this.towers.push(tower);

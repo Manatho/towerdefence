@@ -1,4 +1,4 @@
-import { Point, PointKey } from "./primitives/point";
+import { Point } from "./primitives/point";
 
 export class Graphics {
   constructor(
