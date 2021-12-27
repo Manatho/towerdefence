@@ -6,8 +6,13 @@ export class Tower {
   position: Point;
   target: IPositioned;
 
+  reload: number;
+  lastShot: number;
+
   constructor(x: number, y: number) {
     this.position = new Point(x, y);
+    this.reload = 0.4;
+    this.lastShot = Date.now();
   }
 
   render(graphics: Graphics) {
@@ -17,6 +22,17 @@ export class Tower {
       0.5,
       0.5,
       "#ccc"
+    );
+
+    let progress =
+      Math.min((Date.now() - this.lastShot) / (this.reload * 1000), 1) * 0.6;
+
+    graphics.fillRect(
+      this.position.x + 0.2,
+      this.position.y + 0.9,
+      progress,
+      0.05,
+      "#fff"
     );
 
     let center = Point.add(this.position, 0.5);
