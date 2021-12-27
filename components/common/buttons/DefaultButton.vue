@@ -17,7 +17,9 @@
 </template>
 
 <script lang="ts">
-export default {
+
+
+export default defineComponent({
   props: {
     disabled: Boolean,
   },
@@ -27,5 +29,5 @@ export default {
       this.$emit("click");
     },
   },
-};
+});
 </script>

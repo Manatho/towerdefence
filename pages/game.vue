@@ -32,7 +32,7 @@ let game = null as TowerDefence;
 let controller = null as GameLoopController;
 let graphics = null as Graphics;
 
-export default {
+export default defineComponent({
   mounted() {
     let canvas = this.$refs.gameCanvas as HTMLCanvasElement;
     let ctx = canvas.getContext("2d");
@@ -44,6 +44,7 @@ export default {
     controller.speed = 1 / 60;
 
     game.start();
+    
 
     controller.startLoop(
       () => {},
@@ -54,7 +55,7 @@ export default {
         this.state = currentWave.state;
         this.wave = game.waves.currentWaveIndex + 1;
         this.totalWaves = game.waves.waves.length;
-        
+
         this.health = game.player.health;
         this.resources = game.player.resources;
         game.render(graphics);
@@ -83,9 +84,8 @@ export default {
       let gameX = Math.floor(x / graphics.unitMultiplier);
       let gameY = Math.floor(y / graphics.unitMultiplier);
 
-
       game.click(gameX, gameY);
     },
   },
-};
+});
 </script>

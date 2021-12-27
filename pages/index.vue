@@ -11,7 +11,7 @@
 import { createApp } from "vue";
 import DefaultButton from "~~/components/common/buttons/DefaultButton.vue";
 
-export default {
+export default defineComponent({
   components: { DefaultButton },
 
   methods: {
@@ -19,5 +19,5 @@ export default {
       this.$router.push(path);
     },
   },
-};
+});
 </script>
