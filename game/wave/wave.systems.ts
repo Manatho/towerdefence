@@ -16,7 +16,7 @@ export function waveSpawner(
     if (wave.nextSpawn <= 0) {
       wave.nextSpawn = wave.interval;
       wave.spawned++;
-      creeps.push(new Creep(startPoint.x, startPoint.y, wave.template.speed));
+      creeps.push(new Creep(startPoint.x, startPoint.y, wave.creepTemplate));
     }
   } else if (wave.fightTime > 0) {
     wave.fightTime -= delta;

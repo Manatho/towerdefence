@@ -1,4 +1,5 @@
 import { CreepTemplate } from "../creeps/creep";
+import { WaveTemplate } from "./wave.template";
 
 export enum WaveState {
   Prepping = "Prepping",
@@ -8,39 +9,38 @@ export enum WaveState {
 }
 
 export class Wave {
-  template: CreepTemplate;
-  amount: number;
+  private template: WaveTemplate;
 
-  interval: number;
   nextSpawn: number = 0;
-
   spawned: number = 0;
-  prepTime: number;
 
+  prepTime: number;
   fightTime: number;
 
-  constructor(
-    template: CreepTemplate,
-    options: {
-      prepTime: number;
-      amount: number;
-      interval: number;
-      fightTime: number;
-    }
-  ) {
+  constructor(template: WaveTemplate) {
     this.template = template;
-    this.prepTime = options.prepTime;
-    this.fightTime = options.fightTime;
-    this.interval = options.interval;
-    this.amount = options.amount;
+    this.prepTime = template.prepTime;
+    this.fightTime = template.fightTime;
+  }
+
+  get interval() {
+    return this.template.interval;
+  }
+
+  get amount() {
+    return this.template.amount;
+  }
+
+  get creepTemplate() {
+    return this.template.creepTemplate;
   }
 
   get state(): WaveState {
-    if (this.prepTime > 0) {
+    if (this.template.prepTime > 0) {
       return WaveState.Prepping;
-    } else if (this.spawned < this.amount) {
+    } else if (this.spawned < this.template.amount) {
       return WaveState.Spawning;
-    } else if (this.fightTime > 0) {
+    } else if (this.template.fightTime > 0) {
       return WaveState.Fighting;
     } else {
       return WaveState.Finished;

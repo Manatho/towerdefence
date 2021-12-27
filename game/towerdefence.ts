@@ -80,7 +80,10 @@ export class TowerDefence implements Game {
   click(x: number, y: number) {
     let tower = new Tower(x, y);
     tower.target = { position: new Point(0, 0) };
-    if (!this.currentMap.hasCollision(tower.position) && this.player.resources >= 10) {
+    if (
+      !this.currentMap.hasCollision(tower.position) &&
+      this.player.resources >= 10
+    ) {
       console.log("added");
       this.player.resources -= 10;
       this.towers.push(tower);

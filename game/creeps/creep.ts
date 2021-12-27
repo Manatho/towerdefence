@@ -11,12 +11,12 @@ export class Creep implements IPositioned {
   reward: number;
   startingHealth: number;
 
-  constructor(x: number, y: number, speed = 5, health = 10, reward = 5) {
+  constructor(x: number, y: number, creepTemplate: CreepTemplate) {
     this.position = new Point(x, y);
-    this.speed = speed;
-    this.health = health;
-    this.startingHealth = health;
-    this.reward = reward;
+    this.speed = creepTemplate.speed;
+    this.health = creepTemplate.health;
+    this.startingHealth = creepTemplate.health;
+    this.reward = creepTemplate.reward;
   }
 
   render(graphics: Graphics) {
@@ -27,11 +27,15 @@ export class Creep implements IPositioned {
       this.position.y + 0.2,
       (this.health / this.startingHealth) * 0.5,
       0.1,
-      "#ff0000"
+      "#f00"
     );
   }
 }
 
 export class CreepTemplate {
-  constructor(readonly speed: number) {}
+  constructor(
+    readonly speed: number,
+    readonly health: number,
+    readonly reward: number
+  ) {}
 }

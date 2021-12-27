@@ -1,12 +1,13 @@
 import { Creep, CreepTemplate } from "../creeps/creep";
 import { GridMap } from "../map/grid-map";
 import { Wave } from "../wave/wave";
+import { WaveTemplate } from "../wave/wave.template";
 
 let defaultMapTextures = ["#44b376", "#f0ecad", "#30a6d9", "#798c94"];
 
 export const GameInstanceSettings = {
   maps: [],
-  waves: [],
+  waves: [] as WaveTemplate[],
   defaultMapTextures: defaultMapTextures,
 };
 
@@ -25,14 +26,14 @@ let map1 = new GridMap([
 
 GameInstanceSettings.maps.push(map1);
 
-let wave1 = new Wave(new CreepTemplate(1), {
+let wave1 = new WaveTemplate(new CreepTemplate(1, 10, 5), {
   amount: 5,
   interval: 1,
   prepTime: 2,
   fightTime: 2,
 });
 
-let wave2 = new Wave(new CreepTemplate(2), {
+let wave2 = new WaveTemplate(new CreepTemplate(2, 10, 5), {
   amount: 10,
   interval: 1,
   prepTime: 5,
