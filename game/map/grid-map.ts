@@ -10,9 +10,9 @@ export class GridMap {
 
   collisionMap: Map<PointKey, any> = new Map();
 
-  constructor(grid: Grid) {
+  constructor(grid: Grid, textures: string[]) {
     this.grid = grid;
-    this.textures = GameInstanceSettings.defaultMapTextures;
+    this.textures = textures;
   }
 
   getTile(point: Point) {

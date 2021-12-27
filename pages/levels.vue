@@ -1,22 +1,26 @@
 <template>
   <div class="flex justify-center items-center h-full">
     <div class="flex flex-col text-center max-w-sm gap-2">
-      <DefaultButton @click="goto('/levels')">Start game</DefaultButton>
-      <DefaultButton :disabled="true">Options</DefaultButton>
+      <DefaultButton @click="goto(1)">Level 1</DefaultButton>
+      <DefaultButton @click="goto(2)">Level 2</DefaultButton>
+      <DefaultButton @click="back()">Back</DefaultButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { createApp } from "vue";
 import DefaultButton from "~~/components/common/buttons/DefaultButton.vue";
 
 export default defineComponent({
   components: { DefaultButton },
 
   methods: {
-    goto(path: string) {
-      this.$router.push(path);
+    goto(level: number) {
+      localStorage.setItem("level", (level - 1).toString());
+      this.$router.push("game");
+    },
+    back() {
+      this.$router.push("/");
     },
   },
 });

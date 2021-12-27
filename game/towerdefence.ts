@@ -5,6 +5,7 @@ import {
   creepBaseAttack,
 } from "./creeps/creep.systems";
 import { GameInstanceSettings } from "./game-instance-settings/game-instance-settings";
+import { LevelTemplate } from "./level/level";
 import { GridMap } from "./map/grid-map";
 import { NavigationMap } from "./pathfinding/navigation-map";
 import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
@@ -23,35 +24,45 @@ export class TowerDefence implements Game {
   constructor() {}
 
   controller: GameLoopController;
+
+  currentLevel: LevelTemplate;
   currentMap: GridMap;
+
   currentNavigationMap: NavigationMap;
 
   waves: Waves;
 
-  creeps: Creep[] = [];
-
-  basePoint = new Point(6, 9);
-  startPoint = new Point(3, 0);
-
   player = new Player(10);
 
+  creeps: Creep[] = [];
   towers: Tower[] = [];
 
   start() {
-    this.currentMap = GameInstanceSettings.maps[0];
-    this.waves = new Waves(GameInstanceSettings.waves);
+    let level = Number(localStorage.getItem("level"));
+    this.currentLevel = GameInstanceSettings.levels[level];
+
+    this.currentMap = this.currentLevel.map;
+    this.waves = new Waves(this.currentLevel.waves);
 
     this.currentNavigationMap = Pathfinder.djikstra(
       this.currentMap, //
-      this.basePoint
+      this.currentLevel.basePoint
     );
+  }
+
+  restart() {
+    this.start();
+    this.player = new Player(10);
+    this.creeps = [];
+    this.towers = [];
+    this.currentLevel.map.collisionMap = new Map();
   }
 
   update() {
     waveSpawner(
       this.waves.currentWave,
       this.creeps,
-      this.startPoint,
+      this.currentLevel.startPoint,
       this.controller.delta
     );
 
@@ -60,7 +71,7 @@ export class TowerDefence implements Game {
       this.currentNavigationMap,
       this.controller.delta
     );
-    creepBaseAttack(this.creeps, this.basePoint, this.player);
+    creepBaseAttack(this.creeps, this.currentLevel.basePoint, this.player);
 
     towerUpdateTargets(this.towers, this.creeps);
     towerFire(this.towers, this.player);

@@ -39,6 +39,10 @@ export class GameLoopController {
     this.loop(preUpdate, postUpdate);
   }
 
+  stop() {
+    this.isRunning = false;
+  }
+
   loop(preUpdate: GameLoopHook, postUpdate: GameLoopHook) {
     if (this.isRunning) {
       preUpdate(this);
@@ -48,13 +52,13 @@ export class GameLoopController {
       this.delta = Date.now() / 1000 - this.time;
       this.time = Date.now() / 1000;
 
-      if(this.delta / this.speed > 1.2) {
-       // console.log('slow', this.delta)
+      if (this.delta / this.speed > 1.2) {
+        // console.log('slow', this.delta)
       }
 
       setTimeout(() => {
         this.loop(preUpdate, postUpdate);
-      }, this.speed*1000);
+      }, this.speed * 1000);
     }
   }
 }
