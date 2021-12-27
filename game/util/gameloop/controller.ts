@@ -49,7 +49,7 @@ export class GameLoopController {
       this.time = Date.now() / 1000;
 
       if(this.delta / this.speed > 1.2) {
-        console.log('slow', this.delta)
+       // console.log('slow', this.delta)
       }
 
       setTimeout(() => {

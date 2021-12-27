@@ -8,15 +8,16 @@ export class Creep implements IPositioned {
 
   speed: number;
   health: number;
+  reward: number;
   startingHealth: number;
 
-  constructor(x: number, y: number, speed = 5, health = 10) {
+  constructor(x: number, y: number, speed = 5, health = 10, reward = 5) {
     this.position = new Point(x, y);
     this.speed = speed;
     this.health = health;
     this.startingHealth = health;
+    this.reward = reward;
   }
-
 
   render(graphics: Graphics) {
     graphics.fillRect(this.position.x, this.position.y, 0.1, 0.1, "#f0F");
@@ -28,7 +29,6 @@ export class Creep implements IPositioned {
       0.1,
       "#ff0000"
     );
-
   }
 }
 

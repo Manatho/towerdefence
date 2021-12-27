@@ -63,7 +63,7 @@ export class TowerDefence implements Game {
     creepBaseAttack(this.creeps, this.basePoint, this.player);
 
     towerUpdateTargets(this.towers, this.creeps);
-    towerFire(this.towers);
+    towerFire(this.towers, this.player);
 
     this.creeps = deadCreepRemover(this.creeps);
 
@@ -80,8 +80,9 @@ export class TowerDefence implements Game {
   click(x: number, y: number) {
     let tower = new Tower(x, y);
     tower.target = { position: new Point(0, 0) };
-    if (!this.currentMap.hasCollision(tower.position)) {
+    if (!this.currentMap.hasCollision(tower.position) && this.player.resources >= 10) {
       console.log("added");
+      this.player.resources -= 10;
       this.towers.push(tower);
       this.currentMap.addCollision(tower.position, tower);
     } else {

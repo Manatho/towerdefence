@@ -8,6 +8,7 @@
     <div class="flex gap-4">
       <span>waves: {{ wave }} / {{ totalWaves }}</span>
       <span>hp: {{ health }}</span>
+      <span>resources: {{ resources }}</span>
     </div>
 
     <canvas
@@ -53,8 +54,9 @@ export default {
         this.state = currentWave.state;
         this.wave = game.waves.currentWaveIndex + 1;
         this.totalWaves = game.waves.waves.length;
+        
         this.health = game.player.health;
-
+        this.resources = game.player.resources;
         game.render(graphics);
       }
     );
@@ -68,6 +70,7 @@ export default {
       wave: 0,
       totalWaves: 0,
       health: 0,
+      resources: 0,
     };
   },
 
