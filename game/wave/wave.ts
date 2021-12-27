@@ -36,11 +36,11 @@ export class Wave {
   }
 
   get state(): WaveState {
-    if (this.template.prepTime > 0) {
+    if (this.prepTime > 0) {
       return WaveState.Prepping;
-    } else if (this.spawned < this.template.amount) {
+    } else if (this.spawned < this.amount) {
       return WaveState.Spawning;
-    } else if (this.template.fightTime > 0) {
+    } else if (this.fightTime > 0) {
       return WaveState.Fighting;
     } else {
       return WaveState.Finished;
