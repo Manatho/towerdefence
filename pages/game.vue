@@ -32,6 +32,11 @@
         <DefaultButton class="mx-4 text-center mb-2" @click="pause">
           Pause
         </DefaultButton>
+
+        <div class="flex justify-center">
+          <SpeedSelector @selected="onSelected" />
+        </div>
+
         <div class="flex-grow" />
         <DefaultButton class="mx-4 text-center mb-2" @click="restart">
           Restart
@@ -50,13 +55,17 @@ import { Graphics } from "~~/game/util/graphics";
 import { GameLoopController } from "~~/game/util/gameloop/controller";
 import { WaveState } from "~~/game/wave/wave";
 import DefaultButton from "~~/components/common/buttons/DefaultButton.vue";
+import SpeedSelector from "~~/components/SpeedSelector.vue";
 
 let game = null as TowerDefence;
 let controller = null as GameLoopController;
 let graphics = null as Graphics;
 
 export default defineComponent({
-  components: { DefaultButton },
+  components: {
+    DefaultButton,
+    SpeedSelector,
+  },
 
   mounted() {
     let canvas = this.$refs.gameCanvas as HTMLCanvasElement;
@@ -92,6 +101,10 @@ export default defineComponent({
       let gameY = Math.floor(y / graphics.unitMultiplier);
 
       game.click(gameX, gameY);
+    },
+
+    onSelected(speed: number) {
+      controller.deltaMultiplier = speed;
     },
 
     start() {

@@ -16,6 +16,8 @@ export class GameLoopController {
 
   time: number;
   delta: number;
+  deltaMultiplier: number;
+
   timeOffset: number;
   pauseStart: number;
 
@@ -30,6 +32,7 @@ export class GameLoopController {
 
     this.time = this.now();
     this.delta = 0;
+    this.deltaMultiplier = 1;
     this.timeOffset = 0;
     this.pauseStart = 0;
 
@@ -61,7 +64,6 @@ export class GameLoopController {
       this.isRunning = false;
     } else {
       this.timeOffset += this.now() - this.pauseStart;
-      console.log(this.timeOffset);
       this.isRunning = true;
       if (!this.tickQueued) {
         this.loop(this.preUpdate, this.postUpdate);
@@ -72,7 +74,7 @@ export class GameLoopController {
   loop(preUpdate: GameLoopHook, postUpdate: GameLoopHook) {
     this.tickQueued = false;
     if (this.isRunning) {
-      this.delta = (this.now() - this.time);
+      this.delta = (this.now() - this.time) * this.deltaMultiplier;
       this.time = this.now();
 
       preUpdate(this);
@@ -91,6 +93,6 @@ export class GameLoopController {
   }
 
   private now() {
-    return (Date.now() / 1000) - this.timeOffset;
+    return Date.now() / 1000 - this.timeOffset;
   }
 }

@@ -1,7 +1,6 @@
 <template>
   <div
     class="
-      p-4
       rounded-md
       bg-primary-normal
       text-on-primary
@@ -10,6 +9,7 @@
       transform-gpu
       transition-all
     "
+    :class="{ 'p-1': dense, 'p-4': !dense }"
   >
     <slot />
   </div>
@@ -19,7 +19,7 @@
 export default defineComponent({
   props: {
     disabled: Boolean,
+    dense: Boolean,
   },
-
 });
 </script>
