@@ -74,7 +74,7 @@ export class TowerDefence implements Game {
     creepBaseAttack(this.creeps, this.currentLevel.basePoint, this.player);
 
     towerUpdateTargets(this.towers, this.creeps);
-    towerFire(this.towers, this.player);
+    towerFire(this.controller.delta, this.towers, this.player);
 
     this.creeps = deadCreepRemover(this.creeps);
 

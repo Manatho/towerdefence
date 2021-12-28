@@ -22,8 +22,15 @@
       >
       </canvas>
       <div class="w-32 flex flex-col">
-        <DefaultButton v-if="!started" class="mx-4 text-center mb-2" @click="start">
+        <DefaultButton
+          v-if="!started"
+          class="mx-4 text-center mb-2"
+          @click="start"
+        >
           Start
+        </DefaultButton>
+        <DefaultButton class="mx-4 text-center mb-2" @click="pause">
+          Pause
         </DefaultButton>
         <div class="flex-grow" />
         <DefaultButton class="mx-4 text-center mb-2" @click="restart">
@@ -59,7 +66,7 @@ export default defineComponent({
 
     game = new TowerDefence();
     controller = new GameLoopController(game, 0);
-    controller.speed = 1 / 60;
+    controller.targetFrameTime = 1 / 60;
   },
 
   data() {
@@ -113,6 +120,11 @@ export default defineComponent({
     quit() {
       this.$router.replace("/");
       controller.stop();
+    },
+    pause() {
+      setTimeout(() => {
+        controller.togglePause();
+      }, 100);
     },
   },
 });

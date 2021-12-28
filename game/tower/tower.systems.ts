@@ -7,19 +7,19 @@ export function towerUpdateTargets(towers: Tower[], creeps: Creep[]) {
     towers.forEach((t) => (t.target = creeps[0]));
   } else {
     towers.forEach((t) => (t.target = null));
-
   }
 }
 
-export function towerFire(towers: Tower[], player: Player) {
-  let now = Date.now();
+export function towerFire(delta: number, towers: Tower[], player: Player) {
   towers.forEach((t) => {
-    if (now > t.lastShot + t.reload * 1000)
+    if (t.nextShot < 0) {
       if (t.target instanceof Creep) {
         t.target.health -= 1;
         t.target.dead = t.target.health <= 0;
         player.resources += t.target.health <= 0 ? t.target.reward : 0;
-        t.lastShot = now;
+        t.nextShot = t.reload;
       }
+    }
+    t.nextShot -= delta;
   });
 }

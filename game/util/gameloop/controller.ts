@@ -9,21 +9,31 @@ export interface Game {
 export type GameLoopHook = (controller: GameLoopController) => void;
 export class GameLoopController {
   frame: number;
-  speed: number;
+  targetFrameTime: number;
   isRunning: boolean;
   game: Game;
   instance: number;
 
   time: number;
   delta: number;
+  timeOffset: number;
+  pauseStart: number;
+
+  private tickQueued: boolean;
+  private preUpdate: GameLoopHook;
+  private postUpdate: GameLoopHook;
 
   constructor(game: Game, instance: number) {
     this.instance = instance;
     this.isRunning = true;
     this.frame = 0;
-    this.time = new Date().getTime();
+
+    this.time = this.now();
     this.delta = 0;
-    this.speed = 1000;
+    this.timeOffset = 0;
+    this.pauseStart = 0;
+
+    this.targetFrameTime = 1000;
 
     this.game = game;
     this.game.controller = this;
@@ -35,7 +45,9 @@ export class GameLoopController {
   }
 
   startLoop(preUpdate: GameLoopHook, postUpdate: GameLoopHook) {
-    this.time = Date.now() / 1000;
+    this.time = this.now() - this.timeOffset;
+    this.preUpdate = preUpdate;
+    this.postUpdate = postUpdate;
     this.loop(preUpdate, postUpdate);
   }
 
@@ -43,22 +55,42 @@ export class GameLoopController {
     this.isRunning = false;
   }
 
-  loop(preUpdate: GameLoopHook, postUpdate: GameLoopHook) {
+  togglePause() {
     if (this.isRunning) {
+      this.pauseStart = this.now();
+      this.isRunning = false;
+    } else {
+      this.timeOffset += this.now() - this.pauseStart;
+      console.log(this.timeOffset);
+      this.isRunning = true;
+      if (!this.tickQueued) {
+        this.loop(this.preUpdate, this.postUpdate);
+      }
+    }
+  }
+
+  loop(preUpdate: GameLoopHook, postUpdate: GameLoopHook) {
+    this.tickQueued = false;
+    if (this.isRunning) {
+      this.delta = (this.now() - this.time);
+      this.time = this.now();
+
       preUpdate(this);
       this.next();
       postUpdate(this);
 
-      this.delta = Date.now() / 1000 - this.time;
-      this.time = Date.now() / 1000;
-
-      if (this.delta / this.speed > 1.2) {
+      if (this.delta / this.targetFrameTime > 1.2) {
         // console.log('slow', this.delta)
       }
 
+      this.tickQueued = true;
       setTimeout(() => {
         this.loop(preUpdate, postUpdate);
-      }, this.speed * 1000);
+      }, this.targetFrameTime * 1000);
     }
+  }
+
+  private now() {
+    return (Date.now() / 1000) - this.timeOffset;
   }
 }
