@@ -10,24 +10,16 @@
       transform-gpu
       transition-all
     "
-    @click="onClick"
   >
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-
-
 export default defineComponent({
   props: {
     disabled: Boolean,
   },
 
-  methods: {
-    onClick() {
-      this.$emit("click");
-    },
-  },
 });
 </script>
