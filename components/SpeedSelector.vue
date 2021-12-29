@@ -4,6 +4,7 @@
       class="ml-1"
       v-for="i in [0, 1, 2, 4]"
       dense
+      :disabled="disabled"
       @click="$emit('selected', i)"
       >{{ i }}</DefaultButton
     >

@@ -9,18 +9,43 @@
       <span>waves: {{ wave }} / {{ totalWaves }}</span>
       <span>hp: {{ health }}</span>
       <span>resources: {{ resources }}</span>
+      <span>state: {{ lost ? "Lost" : "Playing" }}</span>
     </div>
 
     <div class="flex">
       <div class="w-32"></div>
-      <canvas
-        ref="gameCanvas"
-        width="500"
-        height="500"
-        style="border: 1px solid #000000"
-        @click="onClick"
-      >
-      </canvas>
+      <div class="relative">
+        <canvas
+          ref="gameCanvas"
+          width="500"
+          height="500"
+          style="border: 1px solid #000000"
+          @click="onClick"
+        />
+        <div v-if="lost" class="absolute top-0 bottom-0 left-0 right-0">
+          <div
+            class="absolute z-0 bg-primary-light opacity-50 h-full w-full"
+          ></div>
+          <div
+            class="flex justify-center items-center relative z-10 h-full w-full"
+          >
+            <div
+              class="
+                flex
+                justify-center
+                items-center
+                bg-primary-dark
+                h-52
+                w-sm
+                rounded-md
+              "
+            >
+              <span class="text-on-primary text-3xl">Lost</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="w-32 flex flex-col">
         <DefaultButton
           v-if="!started"
@@ -29,12 +54,16 @@
         >
           Start
         </DefaultButton>
-        <DefaultButton class="mx-4 text-center mb-2" @click="pause">
+        <DefaultButton
+          class="mx-4 text-center mb-2"
+          @click="pause"
+          :disabled="lost"
+        >
           Pause
         </DefaultButton>
 
         <div class="flex justify-center">
-          <SpeedSelector @selected="onSelected" />
+          <SpeedSelector :disabled="lost" @selected="onSelected" />
         </div>
 
         <div class="flex-grow" />
@@ -88,6 +117,7 @@ export default defineComponent({
       health: 0,
       resources: 0,
       started: false,
+      lost: false,
     };
   },
 
@@ -111,6 +141,8 @@ export default defineComponent({
       this.started = true;
       game.start();
 
+      this.addEventListeners();
+
       controller.startLoop(
         () => {},
         () => {
@@ -129,6 +161,11 @@ export default defineComponent({
     },
     restart() {
       game.restart();
+      this.addEventListeners();
+      this.lost = false;
+      if (!controller.isRunning) {
+        controller.togglePause();
+      }
     },
     quit() {
       this.$router.replace("/");
@@ -138,6 +175,16 @@ export default defineComponent({
       setTimeout(() => {
         controller.togglePause();
       }, 100);
+    },
+    addEventListeners() {
+      TowerDefence.events.on("won", () => {
+        console.log("won");
+      });
+
+      TowerDefence.events.on("lost", () => {
+        this.pause();
+        this.lost = true;
+      });
     },
   },
 });
