@@ -8,7 +8,7 @@ export function towerUpdateTargets(towers: Tower[], creeps: Creep[]) {
     tower.target = null;
     let closest = Number.MAX_VALUE;
     creeps.forEach((creep) => {
-      let distance = Point.distance(tower.position, creep.position);
+      let distance = Point.distance(tower.towerTurretPosition, creep.position);
       if (distance < tower.range && creep.distanceToGoal < closest) {
         closest = creep.distanceToGoal;
 
