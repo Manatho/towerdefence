@@ -57,4 +57,8 @@ export class Point {
     let dy = p1.y - p2.y;
     return Math.atan2(dy, dx);
   }
+
+  static distance(p1: Point, p2: Point) {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+  }
 }

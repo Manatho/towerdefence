@@ -27,6 +27,19 @@ export class Graphics {
     );
   }
 
+  fillCircle(x: number, y: number, radius: number, color: string) {
+    this.ctx.beginPath();
+    this.ctx.arc(
+      x * this.unitMultiplier,
+      y * this.unitMultiplier,
+      radius * this.unitMultiplier,
+      0,
+      2 * Math.PI
+    );
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+  }
+
   strokeLine(p1: Point, p2: Point, width: number, color: string) {
     p1 = Point.multiply(p1, this.unitMultiplier);
     p2 = Point.multiply(p2, this.unitMultiplier);

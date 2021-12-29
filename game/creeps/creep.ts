@@ -18,6 +18,8 @@ export class Creep implements IPositioned {
   reward: number;
   startingHealth: number;
 
+  distanceToGoal: number;
+
   constructor(x: number, y: number, creepTemplate: CreepTemplate) {
     this.position = new Point(x, y);
     this.speed = creepTemplate.speed;

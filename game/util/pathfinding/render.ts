@@ -8,8 +8,8 @@ export function renderPath(NavigationMap: NavigationMap, graphics: Graphics) {
     let x = tile.point.x + 0.5;
     let y = tile.point.y + 0.5;
 
-    let dx = tile.point.x - tile.parent?.x ?? 0;
-    let dy = tile.point.y - tile.parent?.y ?? 0;
+    let dx = tile.point.x - tile.parent?.point.x ?? 0;
+    let dy = tile.point.y - tile.parent?.point.y ?? 0;
 
     if (tile.parent != null) {
       graphics.fillRect(x, y, 0.1, 0.1, "#ff0000");

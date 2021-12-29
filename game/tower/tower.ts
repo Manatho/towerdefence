@@ -7,11 +7,13 @@ export class Tower {
   target: IPositioned;
 
   reload: number;
+  range: number;
   nextShot: number;
 
   constructor(x: number, y: number) {
     this.position = new Point(x, y);
     this.reload = 0.4;
+    this.range = 3;
     this.nextShot = this.reload;
   }
 
@@ -23,6 +25,13 @@ export class Tower {
       0.5,
       "#ccc"
     );
+
+    graphics.fillCircle(
+      this.position.x + 0.5, //
+      this.position.y + 0.5,
+      this.range,
+      "#ccc5"
+    )
 
     let progress = Math.max(this.nextShot / this.reload, 0) * 0.6;
 

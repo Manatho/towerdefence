@@ -1,13 +1,21 @@
 import { CauseOfDeath, Creep } from "../creeps/creep";
 import { Player } from "../player/player";
+import { Point } from "../util/primitives/point";
 import { Tower } from "./tower";
 
 export function towerUpdateTargets(towers: Tower[], creeps: Creep[]) {
-  if (creeps[0] != null) {
-    towers.forEach((t) => (t.target = creeps[0]));
-  } else {
-    towers.forEach((t) => (t.target = null));
-  }
+  towers.forEach((tower) => {
+    tower.target = null;
+    let closest = Number.MAX_VALUE;
+    creeps.forEach((creep) => {
+      let distance = Point.distance(tower.position, creep.position);
+      if (distance < tower.range && creep.distanceToGoal < closest) {
+        closest = creep.distanceToGoal;
+
+        tower.target = creep;
+      }
+    });
+  });
 }
 
 export function towerFire(delta: number, towers: Tower[], player: Player) {

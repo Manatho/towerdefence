@@ -6,7 +6,7 @@ export class PathfindingNode {
   constructor(
     readonly point: Point,
     readonly cost: number,
-    readonly parent?: Point
+    readonly parent?: PathfindingNode
   ) {}
 
   get neighbours(): Point[] {
@@ -22,8 +22,18 @@ export class PathfindingNode {
     if (this.parent == null) {
       return Point.subtract(this.point, this.point);
     } else {
-      return Point.subtract(this.parent, this.point);
+      return Point.subtract(this.parent.point, this.point);
     }
+  }
+
+  distanceToRoot(): number {
+    let distance = 0;
+    let current = this as PathfindingNode;
+    while (current != null) {
+      distance += 1;
+      current = current.parent;
+    }
+    return distance;
   }
 }
 
@@ -69,7 +79,7 @@ function djikstra(map: GridMap, start: Point): Map<PointKey, PathfindingNode> {
       if (!closedList.has(point.toKey()) && map.getTile(point) !== undefined) {
         let cost = current.cost + 1;
 
-        let node = new PathfindingNode(point, cost, current.point);
+        let node = new PathfindingNode(point, cost, current);
         closedList.set(point.toKey(), node);
         openList.enqueue(node, cost);
       }

@@ -11,6 +11,8 @@ export function creepMover(
   creeps.forEach((creep) => {
     let node = navigationMap.get(creep.position);
 
+    creep.distanceToGoal = node.distanceToRoot()
+
     let direction = Point.multiply(node.direction, creep.speed * delta);
 
     creep.position.add(direction);

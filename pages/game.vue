@@ -10,7 +10,6 @@
       <span>hp: {{ health }}</span>
       <span>resources: {{ resources }}</span>
     </div>
-{{won}} {{lost}}
     <div class="flex">
       <div class="w-32"></div>
       <div class="relative">
