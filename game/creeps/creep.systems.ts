@@ -1,5 +1,6 @@
 import { NavigationMap } from "../pathfinding/navigation-map";
 import { Player } from "../player/player";
+import { TowerDefence } from "../towerdefence";
 import { Point } from "../util/primitives/point";
 import { Creep } from "./creep";
 
@@ -31,6 +32,13 @@ export function creepBaseAttack(
     let creepFlored = Point.floor(creep.position);
     if (creepFlored.x == basePosition.x && creepFlored.y == basePosition.y) {
       player.health--;
+      if (player.health <= 0) {
+        if (!player.dead) {
+          TowerDefence.events.emit("lost");
+        }
+        player.dead = true;
+      }
+
       creep.dead = true;
     }
   });

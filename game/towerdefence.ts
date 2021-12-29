@@ -12,6 +12,7 @@ import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
 import { Player } from "./player/player";
 import { Tower } from "./tower/tower";
 import { towerFire, towerUpdateTargets } from "./tower/tower.systems";
+import { EventBus } from "./util/events/bus";
 import { GameLoopController, Game } from "./util/gameloop/controller";
 import { Graphics } from "./util/graphics";
 import { renderPath } from "./util/pathfinding/render";
@@ -22,6 +23,8 @@ import { Waves } from "./wave/waves";
 
 export class TowerDefence implements Game {
   constructor() {}
+
+  static events = new EventBus();
 
   controller: GameLoopController;
 
@@ -38,6 +41,8 @@ export class TowerDefence implements Game {
   towers: Tower[] = [];
 
   start() {
+    TowerDefence.events = new EventBus();
+
     let level = Number(localStorage.getItem("level"));
     this.currentLevel = GameInstanceSettings.levels[level];
 

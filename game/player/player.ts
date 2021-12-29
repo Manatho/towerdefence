@@ -1,4 +1,5 @@
 export class Player {
+  dead: boolean;
   health: number;
   resources: number;
 
