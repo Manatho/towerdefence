@@ -1,4 +1,4 @@
-import { Creep } from "../creeps/creep";
+import { CauseOfDeath, Creep } from "../creeps/creep";
 import { Player } from "../player/player";
 import { Tower } from "./tower";
 
@@ -11,15 +11,17 @@ export function towerUpdateTargets(towers: Tower[], creeps: Creep[]) {
 }
 
 export function towerFire(delta: number, towers: Tower[], player: Player) {
-  towers.forEach((t) => {
-    if (t.nextShot < 0) {
-      if (t.target instanceof Creep) {
-        t.target.health -= 1;
-        t.target.dead = t.target.health <= 0;
-        player.resources += t.target.health <= 0 ? t.target.reward : 0;
-        t.nextShot = t.reload;
+  towers.forEach((tower) => {
+    if (tower.nextShot < 0) {
+      if (tower.target instanceof Creep) {
+        tower.target.health -= 1;
+        tower.target.dead = tower.target.health <= 0;
+        if (tower.target.dead) {
+          tower.target.causeOfDeath = CauseOfDeath.Shot;
+        }
+        tower.nextShot = tower.reload;
       }
     }
-    t.nextShot -= delta;
+    tower.nextShot -= delta;
   });
 }

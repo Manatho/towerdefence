@@ -11,7 +11,7 @@ export function waveSpawner(
 ) {
   if (wave.prepTime > 0) {
     wave.prepTime -= delta;
-  } else if (wave.spawned < wave.amount) {
+  } else if (wave.spawned < wave.amountToSpawn) {
     wave.nextSpawn -= delta;
     if (wave.nextSpawn <= 0) {
       wave.nextSpawn = wave.interval;

@@ -1,8 +1,7 @@
 import { NavigationMap } from "../pathfinding/navigation-map";
 import { Player } from "../player/player";
-import { TowerDefence } from "../towerdefence";
 import { Point } from "../util/primitives/point";
-import { Creep } from "./creep";
+import { CauseOfDeath, Creep } from "./creep";
 
 export function creepMover(
   creeps: Creep[],
@@ -13,10 +12,6 @@ export function creepMover(
     let node = navigationMap.get(creep.position);
 
     let direction = Point.multiply(node.direction, creep.speed * delta);
-
-    if (node.direction.x == 0 && node.direction.y == 0) {
-      creep.dead = true;
-    }
 
     creep.position.add(direction);
   });
@@ -32,18 +27,17 @@ export function creepBaseAttack(
     let creepFlored = Point.floor(creep.position);
     if (creepFlored.x == basePosition.x && creepFlored.y == basePosition.y) {
       player.health--;
-      if (player.health <= 0) {
-        if (!player.dead) {
-          TowerDefence.events.emit("lost");
-        }
-        player.dead = true;
-      }
-
       creep.dead = true;
+      creep.causeOfDeath = CauseOfDeath.SelfDestruct;
     }
   });
 }
 
-export function deadCreepRemover(creeps: Creep[]) {
+export function deadCreepRemover(creeps: Creep[], player: Player) {
+  let killedCreeps = creeps.filter((c) => c.causeOfDeath == CauseOfDeath.Shot);
+  killedCreeps.forEach((c) => {
+    player.resources += c.reward;
+  });
+
   return creeps.filter((c) => !c.dead);
 }

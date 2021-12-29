@@ -27,7 +27,7 @@ export class Wave {
     return this.template.interval;
   }
 
-  get amount() {
+  get amountToSpawn() {
     return this.template.amount;
   }
 
@@ -38,7 +38,7 @@ export class Wave {
   get state(): WaveState {
     if (this.prepTime > 0) {
       return WaveState.Prepping;
-    } else if (this.spawned < this.amount) {
+    } else if (this.spawned < this.amountToSpawn) {
       return WaveState.Spawning;
     } else if (this.fightTime > 0) {
       return WaveState.Fighting;

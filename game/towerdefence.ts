@@ -10,6 +10,7 @@ import { GridMap } from "./map/grid-map";
 import { NavigationMap } from "./pathfinding/navigation-map";
 import { Pathfinder, PathfindingNode } from "./pathfinding/pathfinding";
 import { Player } from "./player/player";
+import { playerState } from "./player/player.system";
 import { Tower } from "./tower/tower";
 import { towerFire, towerUpdateTargets } from "./tower/tower.systems";
 import { EventBus } from "./util/events/bus";
@@ -81,9 +82,11 @@ export class TowerDefence implements Game {
     towerUpdateTargets(this.towers, this.creeps);
     towerFire(this.controller.delta, this.towers, this.player);
 
-    this.creeps = deadCreepRemover(this.creeps);
+    this.creeps = deadCreepRemover(this.creeps, this.player);
 
     nextWave(this.waves);
+
+    playerState(this.player, this.waves, this.creeps);
   }
 
   render(graphics: Graphics): void {

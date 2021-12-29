@@ -2,9 +2,16 @@ import { Graphics } from "../util/graphics";
 import { IPositioned } from "../util/interfaces/i-positioned";
 import { Point } from "../util/primitives/point";
 
+export enum CauseOfDeath {
+  SelfDestruct = "SelfDestruct",
+  Shot = "Shot",
+}
+
 export class Creep implements IPositioned {
   position: Point;
+
   dead: boolean = false;
+  causeOfDeath: CauseOfDeath;
 
   speed: number;
   health: number;

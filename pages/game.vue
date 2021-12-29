@@ -9,9 +9,8 @@
       <span>waves: {{ wave }} / {{ totalWaves }}</span>
       <span>hp: {{ health }}</span>
       <span>resources: {{ resources }}</span>
-      <span>state: {{ lost ? "Lost" : "Playing" }}</span>
     </div>
-
+{{won}} {{lost}}
     <div class="flex">
       <div class="w-32"></div>
       <div class="relative">
@@ -22,7 +21,7 @@
           style="border: 1px solid #000000"
           @click="onClick"
         />
-        <div v-if="lost" class="absolute top-0 bottom-0 left-0 right-0">
+        <div v-if="lost || won" class="absolute top-0 bottom-0 left-0 right-0">
           <div
             class="absolute z-0 bg-primary-light opacity-50 h-full w-full"
           ></div>
@@ -40,7 +39,9 @@
                 rounded-md
               "
             >
-              <span class="text-on-primary text-3xl">Lost</span>
+              <span class="text-on-primary text-3xl">{{
+                lost ? "Lost" : "Won"
+              }}</span>
             </div>
           </div>
         </div>
@@ -57,13 +58,13 @@
         <DefaultButton
           class="mx-4 text-center mb-2"
           @click="pause"
-          :disabled="lost"
+          :disabled="lost || won"
         >
           Pause
         </DefaultButton>
 
         <div class="flex justify-center">
-          <SpeedSelector :disabled="lost" @selected="onSelected" />
+          <SpeedSelector :disabled="lost || won" @selected="onSelected" />
         </div>
 
         <div class="flex-grow" />
@@ -118,6 +119,7 @@ export default defineComponent({
       resources: 0,
       started: false,
       lost: false,
+      won: false,
     };
   },
 
@@ -163,6 +165,7 @@ export default defineComponent({
       game.restart();
       this.addEventListeners();
       this.lost = false;
+      this.won = false;
       if (!controller.isRunning) {
         controller.togglePause();
       }
@@ -178,7 +181,8 @@ export default defineComponent({
     },
     addEventListeners() {
       TowerDefence.events.on("won", () => {
-        console.log("won");
+        this.pause();
+        this.won = true;
       });
 
       TowerDefence.events.on("lost", () => {
