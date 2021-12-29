@@ -50,4 +50,13 @@ export class Tower {
 
     graphics.strokeLine(center, turretEnd, 4, "#555");
   }
+
+  renderRange(graphics) {
+    graphics.fillCircle(
+      this.position.x + 0.5, //
+      this.position.y + 0.5,
+      this.range,
+      "#ccc5"
+    );
+  }
 }

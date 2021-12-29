@@ -1,8 +1,5 @@
-import { Graphics } from "../graphics";
-
 export interface Game {
   update(): void;
-  render(graphics: Graphics): void;
   controller: GameLoopController;
 }
 

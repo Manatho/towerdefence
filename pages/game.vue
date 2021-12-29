@@ -11,7 +11,7 @@
       <span>resources: {{ resources }}</span>
     </div>
     <div class="flex">
-      <div class="w-32"></div>
+      <div class="w-40"></div>
       <div class="relative">
         <canvas
           ref="gameCanvas"
@@ -19,6 +19,7 @@
           height="500"
           style="border: 1px solid #000000"
           @click="onClick"
+          @mousemove="onMove"
         />
         <div v-if="lost || won" class="absolute top-0 bottom-0 left-0 right-0">
           <div
@@ -46,7 +47,7 @@
         </div>
       </div>
 
-      <div class="w-32 flex flex-col">
+      <div class="w-40 p-2 flex flex-col">
         <DefaultButton
           v-if="!started"
           class="mx-4 text-center mb-2"
@@ -65,6 +66,7 @@
         <div class="flex justify-center">
           <SpeedSelector :disabled="lost || won" @selected="onSelected" />
         </div>
+        <TowerInfo :key="frame" :tower="tower" />
 
         <div class="flex-grow" />
         <DefaultButton class="mx-4 text-center mb-2" @click="restart">
@@ -85,8 +87,12 @@ import { GameLoopController } from "~~/game/util/gameloop/controller";
 import { WaveState } from "~~/game/wave/wave";
 import DefaultButton from "~~/components/common/buttons/DefaultButton.vue";
 import SpeedSelector from "~~/components/SpeedSelector.vue";
+import { renderPath } from "~~/game/util/pathfinding/render";
+import { Tower } from "~~/game/tower/tower";
+import TowerInfo from "~~/components/towers/TowerInfo.vue";
 
 let game = null as TowerDefence;
+let towerRef = null as Tower;
 let controller = null as GameLoopController;
 let graphics = null as Graphics;
 
@@ -94,6 +100,7 @@ export default defineComponent({
   components: {
     DefaultButton,
     SpeedSelector,
+    TowerInfo,
   },
 
   mounted() {
@@ -119,6 +126,8 @@ export default defineComponent({
       started: false,
       lost: false,
       won: false,
+      tower: null as Tower,
+      frame: 0,
     };
   },
 
@@ -133,6 +142,17 @@ export default defineComponent({
 
       game.click(gameX, gameY);
     },
+    onMove(e: MouseEvent) {
+      let rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+      let x = e.clientX - rect.left;
+      let y = e.clientY - rect.top;
+
+      let gameX = Math.floor(x / graphics.unitMultiplier);
+      let gameY = Math.floor(y / graphics.unitMultiplier);
+
+      let tower = game.getTowerAt(gameX, gameY);
+      towerRef = tower;
+    },
 
     onSelected(speed: number) {
       controller.deltaMultiplier = speed;
@@ -145,7 +165,9 @@ export default defineComponent({
       this.addEventListeners();
 
       controller.startLoop(
-        () => {},
+        () => {
+          this.tower = null;
+        },
         () => {
           let currentWave = game.waves.currentWave;
           this.prepTime = currentWave.prepTime;
@@ -154,9 +176,17 @@ export default defineComponent({
           this.wave = game.waves.currentWaveIndex + 1;
           this.totalWaves = game.waves.waves.length;
 
+          this.frame = controller.frame;
+
+          if (towerRef != null) {
+            this.tower = { ...towerRef };
+          } else {
+            this.tower = null;
+          }
+
           this.health = game.player.health;
           this.resources = game.player.resources;
-          game.render(graphics);
+          this.renderGame();
         }
       );
     },
@@ -167,6 +197,15 @@ export default defineComponent({
       this.won = false;
       if (!controller.isRunning) {
         controller.togglePause();
+      }
+    },
+    renderGame() {
+      game.currentMap.render(graphics);
+      renderPath(game.currentNavigationMap, graphics);
+      game.creeps.forEach((c) => c.render(graphics));
+      game.towers.forEach((t) => t.render(graphics));
+      if (towerRef != null) {
+        towerRef.renderRange(graphics);
       }
     },
     quit() {

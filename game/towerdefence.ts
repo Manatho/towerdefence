@@ -89,13 +89,6 @@ export class TowerDefence implements Game {
     playerState(this.player, this.waves, this.creeps);
   }
 
-  render(graphics: Graphics): void {
-    this.currentMap.render(graphics);
-    renderPath(this.currentNavigationMap, graphics);
-    this.creeps.forEach((c) => c.render(graphics));
-    this.towers.forEach((t) => t.render(graphics));
-  }
-
   click(x: number, y: number) {
     let tower = new Tower(x, y);
     tower.target = { position: new Point(0, 0) };
@@ -110,5 +103,9 @@ export class TowerDefence implements Game {
     } else {
       console.log("added not");
     }
+  }
+
+  getTowerAt(x: number, y: number) {
+    return this.towers.find((t) => t.position.x == x && t.position.y == y);
   }
 }
